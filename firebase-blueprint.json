@@ -1,0 +1,105 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the fitness center application (Admin, Trainer, or Member).",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "name": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "trainer", "member"] },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["uid", "email", "name", "role", "createdAt"]
+    },
+    "MemberProfile": {
+      "title": "MemberProfile",
+      "description": "Additional details for members.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "phone": { "type": "string" },
+        "dob": { "type": "string" },
+        "gender": { "type": "string" },
+        "height": { "type": "number" },
+        "weight": { "type": "number" },
+        "medicalConditions": { "type": "string" },
+        "trainerId": { "type": "string" },
+        "membershipPlanId": { "type": "string" },
+        "startDate": { "type": "number" },
+        "expiryDate": { "type": "number" },
+        "status": { "type": "string", "enum": ["Active", "Inactive"] }
+      },
+      "required": ["userId", "status"]
+    },
+    "Class": {
+      "title": "Class",
+      "description": "A fitness class session.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "trainerId": { "type": "string" },
+        "capacity": { "type": "number" },
+        "enrolled": { "type": "number" },
+        "time": { "type": "string" },
+        "duration": { "type": "string" },
+        "type": { "type": "string" }
+      },
+      "required": ["name", "trainerId", "capacity", "enrolled", "time", "type"]
+    },
+    "WorkoutPlan": {
+      "title": "WorkoutPlan",
+      "description": "A workout plan assigned to a member.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "trainerId": { "type": "string" },
+        "memberId": { "type": "string" },
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "exercises": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "sets": { "type": "number" },
+                    "reps": { "type": "string" },
+                    "weight": { "type": "string" },
+                    "completed": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": ["name", "trainerId", "memberId", "days"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user profiles and roles."
+    },
+    "/memberProfiles/{userId}": {
+      "schema": { "$ref": "#/entities/MemberProfile" },
+      "description": "Stores additional member details."
+    },
+    "/classes/{classId}": {
+      "schema": { "$ref": "#/entities/Class" },
+      "description": "Stores fitness classes."
+    },
+    "/workoutPlans/{planId}": {
+      "schema": { "$ref": "#/entities/WorkoutPlan" },
+      "description": "Stores workout plans."
+    }
+  }
+}
